@@ -33,7 +33,7 @@ class BaseXEncoder
     /**
      * The alphabet used to encode the number.
      *
-     * @since   1.0
+     * @since   0.1
      * @access  private
      * @var     string
      */
@@ -42,12 +42,20 @@ class BaseXEncoder
     /**
      * the base to which the numbers are encoded/decoded. strlen($this->alphabet)
      *
-     * @since   1.0
+     * @since   0.1
      * @access  public
      * @var     int
      */
     private $base;
 
+    /**
+     * Constructor.
+     *
+     * @since   0.1
+     * @access  public
+     * @param   string $alphabet The alphabet to which integers are encoded
+     * @return  void
+     */
     public function __construct($alphabet=null)
     {
         if (!$alphabet) {
@@ -58,6 +66,14 @@ class BaseXEncoder
         $this->base = strlen($this->alphabet);
     }
 
+    /**
+     * Encode an integer with the alphabet and return the resulting string.
+     *
+     * @since   0.1
+     * @access  public
+     * @param   int $id The ID to encode
+     * @return  string
+     */
     public function encode($id)
     {
         $id = abs(intval($id));
@@ -72,19 +88,27 @@ class BaseXEncoder
         return strrev($str);
     }
 
+    /**
+     * Decode a string to its integer equivelent. Returns false if it encouters
+     * a letter that's not in the alphabet.
+     *
+     * @since   0.1
+     * @access  public
+     * @param   string $string The string to decode.
+     * @return  int
+     */
     public function decode($string)
     {
-        $len = strlen($string);
+        $len = strlen($string) - 1;
 
         $total = 0;
 
-        for ($i = 0; $i < $len; $i++) {
+        for ($i = 0; $i <= $len; $i++) {
             if (false === $index = strpos($this->alphabet, $string[$i])) {
                 return false; // got a letter not in our alphabet.
             }
 
-
-            $total += $index * pow($this->base, $len - $i - 1);
+            $total += $index * pow($this->base, $len - $i);
         }
 
         return $total;
